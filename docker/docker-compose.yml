@@ -1,0 +1,29 @@
+version: "3.8"
+services:
+  db:
+    build:
+      context: ..
+      dockerfile: docker/mssql.Dockerfile
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "YourStrong!Pass1"
+      MSSQL_PID: "Developer"
+    ports:
+      - "1433:1433"
+    volumes:
+      - ../scripts:/scripts:ro
+    command: /bin/bash -c "/opt/mssql/bin/sqlservr & sleep 20 && /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P YourStrong!Pass1 -i /scripts/create_table.sql && wait"
+
+  app:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    depends_on:
+      - db
+    ports:
+      - "3000:3000"
+    volumes:
+      - ../data:/app/data:ro
+    env_file:
+      - ../.env
+    restart: unless-stopped

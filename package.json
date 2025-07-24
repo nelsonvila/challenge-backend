@@ -1,0 +1,28 @@
+{
+  "name": "challenge-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "ts-node-dev --respawn src/index.ts",
+    "build": "tsc",
+    "start": "npm run build && node dist/index.js",
+    "docker:up": "sudo docker-compose -f docker/docker-compose.yml up -d --build",
+    "docker:down": "sudo docker-compose -f docker/docker-compose.yml down",
+    "db:init": "sudo docker-compose exec db /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P $DB_PASS -i scripts/create_table.sql"
+  },
+  "dependencies": {
+    "chokidar": "^4.0.3",
+    "dotenv": "^17.2.0",
+    "fastify": "^5.4.0",
+    "fastify-multipart": "^5.4.0",
+    "mssql": "^11.0.1",
+    "pino": "^9.7.0"
+  },
+  "devDependencies": {
+    "@types/mssql": "^9.1.7",
+    "@types/node": "^24.0.14",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.8.3"
+  }
+}
